@@ -1,0 +1,54 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerDir : MonoBehaviour {
+
+    public GameObject effect_click_prefab;
+    private bool isMoving = false;//表示鼠标是否按下
+    private Vector3 targetPosition;
+
+	void Update () {
+		if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+            bool isColoder = Physics.Raycast(ray, out hitInfo);
+            if (isColoder&&hitInfo .collider .tag==Tags .ground)
+            {
+                isMoving = true;
+                ShowClickEffect(hitInfo.point);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            isMoving = false ;
+        }
+
+        if (isMoving)
+        {//得到要移动的位置
+         //让主角向目标移动
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+            bool isColoder = Physics.Raycast(ray, out hitInfo);
+            if (isColoder && hitInfo.collider.tag == Tags.ground)
+            {
+                targetPosition = hitInfo.point;
+                targetPosition = new Vector3(targetPosition.x, targetPosition.y, targetPosition.z);
+            }
+            this.transform.LookAt(targetPosition);//改变朝向
+        }
+
+
+	}
+
+
+
+    void ShowClickEffect(Vector3 hitPoint)//实例化点击出来的效果
+    {
+        hitPoint = new Vector3(hitPoint.x, hitPoint.y+0.1f, hitPoint.z);
+        GameObject.Instantiate(effect_click_prefab, hitPoint, Quaternion.identity);
+    }
+
+}
